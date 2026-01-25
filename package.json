@@ -1,0 +1,94 @@
+{
+  "name": "react-fast-context-z",
+  "version": "1.0.0-beta",
+  "description": "A lightweight, provider-less React context alternative with fine-grained subscriptions. Built on useSyncExternalStore for fast, predictable re-renders.",
+  "license": "MIT",
+  "author": "Delpi.Kye",
+  "type": "module",
+  "sideEffects": false,
+  "main": "build/index.cjs.js",
+  "module": "build/index.esm.js",
+  "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.esm.js",
+      "require": "./build/index.cjs.js"
+    },
+    "./devtools": {
+      "types": "./build/devtools/index.d.ts",
+      "import": "./build/devtools/index.esm.js",
+      "require": "./build/devtools/index.cjs.js"
+    }
+  },
+  "files": [
+    "build",
+    "README.md"
+  ],
+  "scripts": {
+    "clean": "rimraf build",
+    "dev": "rollup -c -w",
+    "build": "rollup -c",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/delpikye-v/react-fast-context.git"
+  },
+  "homepage": "https://github.com/delpikye-v/react-fast-context#readme",
+  "bugs": {
+    "url": "https://github.com/delpikye-v/react-fast-context/issues"
+  },
+  "keywords": [
+    "react",
+    "react-state",
+    "state-management",
+    "external-store",
+    "useSyncExternalStore",
+    "react-18",
+    "react-19",
+
+    "fine-grained",
+    "selector-based",
+    "subscription-store",
+    "react-performance",
+
+    "no-provider",
+    "no-context",
+    "no-reducer",
+
+    "headless",
+    "framework-agnostic",
+    "logic-first",
+
+    "intent-driven",
+    "intentx",
+    "side-effect-safe",
+    "domain-logic",
+    "react-runtime",
+    "deterministic"
+  ],
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@types/react": "^18.0.2",
+    "@types/react-dom": "^18.0.2",
+    "rimraf": "^5.0.5",
+    "rollup": "^4.12.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "intentx-core-z": "^2.1.0"
+  }
+}
