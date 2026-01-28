@@ -1,36 +1,21 @@
-import { StateActionMap, FastContextProps } from "./core/types";
-export declare function createFastContext<S extends object, A extends StateActionMap<S>>(props: FastContextProps<S, A>): {
-    state: () => S;
-    set: (state: import("./core/types").StateUpdater<S>) => void;
-    replace: (next: S) => void;
-    batch: (fn: () => void) => void;
-    transaction: (fn: () => void) => void;
-    use: <R>(selector: (state: S) => R, isEqual?: import("./react/fastSelector").EqualityFn<R>) => R;
-    computed: <R>(selector: (s: S) => R, equality?: (a: R, b: R) => boolean) => {
-        use: () => R;
-        value: () => R;
-    };
-    scope: (state: S) => {
-        state: () => S;
-        set: (state: import("./core/types").StateUpdater<S>) => void;
-        replace: (next: S) => void;
-        batch: (fn: () => void) => void;
-        transaction: (fn: () => void) => void;
-        use: <R>(selector: (state: S) => R, isEqual?: import("./react/fastSelector").EqualityFn<R>) => R;
-        computed: <R>(selector: (s: S) => R, equality?: (a: R, b: R) => boolean) => {
-            use: () => R;
-            value: () => R;
-        };
-        scope: any;
-        subscribe: (fn: import("./core/types").Listener) => () => boolean;
-        devtools: (cb: (info: {
-            state: S;
-        }) => void) => () => boolean;
-        actions: A extends StateActionMap<S> ? { [K in keyof A]: (...args: Parameters<A[K]> extends [any, ...infer A_1] ? A_1 : never) => void; } : undefined;
-    };
-    subscribe: (fn: import("./core/types").Listener) => () => boolean;
+import type { Store } from "./core/store";
+import type { StateActionMap, FastContextProps } from "./core/types";
+type BoundActions<S, A extends StateActionMap<S>> = {
+    [K in keyof A]: (...args: Parameters<A[K]> extends [any, ...infer P] ? P : never) => void;
+};
+type ResolveActions<S, A> = A extends StateActionMap<S> ? BoundActions<S, A> : undefined;
+type FastContextReturn<S, A> = {
+    state: S;
+    set: Store<S>["set"];
+    replace: Store<S>["replace"];
+    batch: Store<S>["batch"];
+    transaction: Store<S>["transaction"];
+    subscribe: Store<S>["subscribe"];
     devtools: (cb: (info: {
         state: S;
-    }) => void) => () => boolean;
-    actions: A extends StateActionMap<S> ? { [K in keyof A]: (...args: Parameters<A[K]> extends [any, ...infer A_1] ? A_1 : never) => void; } : undefined;
+    }) => void) => () => void;
+    use: <T = S>(selector?: (state: S) => T) => T;
+    actions: ResolveActions<S, A>;
 };
+export declare function createFastContext<S extends object, A extends StateActionMap<S>>(props: FastContextProps<S, A>): FastContextReturn<S, A>;
+export {};

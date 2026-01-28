@@ -6,22 +6,23 @@
 
 ---
 
-**Ultra-lightweight**, selector-based React state container. No Provider. No reducer. No proxy. No magic.
+**Ultra-lightweight**, selector-based state container for React.  
+No Provider. No reducer. No proxy. No magic.
 
-Designed to stay boring, predictable, and fast, and to integrate cleanly with intent-driven logic cores like `intentx-core-z`.
+Designed to stay **boring, explicit, and fast** — and to integrate cleanly with intent-driven logic cores like `intentx-core-z`.
 
-> **How do we read and update state in React with the least possible overhead?**
+> **Read and update state with the least possible runtime overhead.**
 
 ---
 
-## Why react-fast-context-z
+## Why react-fast-context-z?
 
-- Fast renders via selectors
-- Explicit state mutation
-- Zero Provider / Context tree
-- Framework-agnostic core
-- Clean integration with external logic engines
-- Tiny bundle size
+- ⚡ Fast re-renders via fine-grained selectors
+- ✍️ Explicit, imperative state mutation
+- 🚫 No Provider / no Context tree
+- 🧠 Framework-agnostic core (works outside React)
+- 🔌 Clean integration with external logic / intent engines
+- 📦 Tiny bundle, minimal runtime
 
 ---
 
@@ -39,7 +40,11 @@ intent / action
  React re-render
 ```
 
-No reducers. No dependency graph. No proxy tracking.
+No reducers.  
+No dependency graph.  
+No proxy tracking.
+
+What you write is exactly what runs.
 
 ---
 
@@ -60,37 +65,37 @@ const counter = createFastContext({
   state: { count: 0, loading: false },
   actions: {
     inc(s) {
-      s.loading = true;
+      s.loading = true
       s.count++
       s.loading = false
     },
     add(s, n: number) {
       s.count += n
     },
-  }}
-)
+  },
+})
 
 const double = counter.computed(s => s.count * 2)
-// counter.state().count
 
 export function Fast() {
   const count = counter.use(s => s.count)
 
   return (
     <>
-      {double.use()}
+      <div>{double.use()}</div>
       <button onClick={() => counter.actions.inc()}>
         {count}
       </button>
     </>
   )
 }
-
 ```
 
 ---
 
-## Derived Selectors
+## Selectors & Derived State
+
+Selectors subscribe **only to what they read**.
 
 ```ts
 const double = counter.computed(s => s.count * 2)
@@ -101,9 +106,62 @@ function View() {
 }
 ```
 
+- No re-render if selector output doesn’t change
+- Derived selectors are memoized and reactive
+
 ---
 
-## Batch / Transaction
+## Merge Mode
+
+`react-fast-context-z` supports configurable **merge strategies** when updating state.
+
+```ts
+const store = createFastContext({
+  state: { user: { name: "A", age: 20 } },
+  merge: "shallow",
+})
+```
+
+### Available modes
+
+#### `merge: "shallow"` (default)
+
+- Shallow-merge object fields
+- Mutated fields are preserved
+- Ideal for **mutable, intent-driven updates**
+
+```ts
+set(s => {
+  s.user.name = "B"
+})
+// keeps user.age
+```
+
+#### `merge: "replace"`
+
+- Replace state reference entirely
+- Useful when state is treated as immutable snapshots
+
+```ts
+set(() => ({
+  user: { name: "B", age: 30 }
+}))
+```
+
+### When to use which?
+
+| Mode       | Use case                                       |
+|------------|------------------------------------------------|
+| shallow    | Explicit mutation, intent/actions, local state |
+| replace    | Immutable data, server snapshots, undo/redo    |
+
+The merge mode is **explicit** — no hidden heuristics.
+
+---
+
+## Batch & Transaction
+
+### Batch updates (single notify)
 
 ```ts
 counter.batch(() => {
@@ -112,7 +170,7 @@ counter.batch(() => {
 })
 ```
 
-Rollback-safe transaction:
+### Rollback-safe transaction
 
 ```ts
 try {
@@ -122,6 +180,8 @@ try {
   })
 } catch {}
 ```
+
+State is restored automatically if an error is thrown.
 
 ---
 
@@ -139,31 +199,32 @@ bus.on("increment", ({ setState }) => {
     s.count++
   })
 })
-
 ```
+
+Designed to work cleanly with **intent-first architectures**.
 
 ---
 
 ## Comparison
 
-| Feature / Library        | React Context | Redux | Zustand | Jotai | react-fast-context-z |
-|--------------------------|---------------|-------|---------|-------|----------------------|
-| Provider required        | ❌            | ❌     | ❌      | ❌    | ✅ No Provider        |
-| Selector-based render    | ❌            | ✅     | ✅      | ✅    | ✅                    |
-| Proxy / atom graph       | ❌            | ❌     | ❌      | ✅    | ❌                    |
-| Reducers                 | ❌            | ✅     | ❌      | ❌    | ❌                    |
-| Explicit mutation        | ❌            | ❌     | ⚠️      | ❌    | ✅                    |
-| Works outside React      | ❌            | ⚠️     | ⚠️      | ❌    | ✅                    |
-| Intent engine friendly   | ❌            | ❌     | ⚠️      | ❌    | ✅                    |
-| Bundle size              | small         | large | small   | small | **tiny**             |
+| Feature / Library      | React Context | Redux | Zustand | Jotai | react-fast-context-z |
+|-----------------------|---------------|-------|---------|-------|----------------------|
+| Provider required     | ❌            | ❌    | ❌      | ❌    | ❌                   |
+| Selector-based render | ❌            | ✅    | ✅      | ✅    | ✅                   |
+| Proxy / atom graph    | ❌            | ❌    | ❌      | ✅    | ❌                   |
+| Reducers              | ❌            | ✅    | ❌      | ❌    | ❌                   |
+| Explicit mutation     | ❌            | ❌    | ⚠️      | ❌    | ✅                   |
+| Works outside React   | ❌            | ⚠️    | ⚠️      | ❌    | ✅                   |
+| Intent friendly       | ❌            | ❌    | ⚠️      | ❌    | ✅                   |
+| Bundle size           | small         | large | small   | small | **tiny**             |
 
 ---
 
 ## Philosophy
 
-- State should be boring.  
-- Logic should be explicit.  
-- Rendering should be fast.
+- State should be boring  
+- Logic should be explicit  
+- Rendering should be fast  
 
 If you:
 - already have a logic layer
