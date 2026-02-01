@@ -6,10 +6,9 @@
 
 ---
 
-**Ultra-lightweight**, selector-based state container for React.  
-No Provider. No reducer. No proxy. No magic.
+**Ultra-lightweight**, selector-based state container for React. No Provider. No reducer. No proxy. No magic.
 
-Designed to stay **boring, explicit, and fast** — and to integrate cleanly with intent-driven logic cores like `intentx-core-z`.
+Designed to stay **boring, explicit, and fast**
 
 > **Read and update state with the least possible runtime overhead.**
 
@@ -207,16 +206,19 @@ Designed to work cleanly with **intent-first architectures**.
 
 ## Comparison
 
-| Feature / Library      | React Context | Redux | Zustand | Jotai | react-fast-context-z |
-|-----------------------|---------------|-------|---------|-------|----------------------|
-| Provider required     | ❌            | ❌    | ❌      | ❌    | ❌                   |
-| Selector-based render | ❌            | ✅    | ✅      | ✅    | ✅                   |
-| Proxy / atom graph    | ❌            | ❌    | ❌      | ✅    | ❌                   |
-| Reducers              | ❌            | ✅    | ❌      | ❌    | ❌                   |
-| Explicit mutation     | ❌            | ❌    | ⚠️      | ❌    | ✅                   |
-| Works outside React   | ❌            | ⚠️    | ⚠️      | ❌    | ✅                   |
-| Intent friendly       | ❌            | ❌    | ⚠️      | ❌    | ✅                   |
-| Bundle size           | small         | large | small   | small | **tiny**             |
+| Feature / Library                  | React Context | Redux  | Zustand | Jotai  | react-fast-context-z |
+| ---------------------------------- | ------------- | -----  | ------- | -----  | -------------------- |
+| **Provider required**              | ⚠️             | ❌     | ❌      | ❌     | ❌                    |
+| **Selector-based render**          | ❌             | ✅     | ✅      | ✅     | ✅                    |
+| **Fine-grained updates**           | ❌             | ⚠️     | ⚠️      | ✅     | ✅                    |
+| **Proxy / atom graph**             | ❌             | ❌     | ❌      | ✅     | ❌                    |
+| **Reducers required**              | ❌             | ✅     | ❌      | ❌     | ❌                    |
+| **Direct mutation API**            | ❌             | ❌     | ⚠️²     | ❌     | ✅                    |
+| **Works outside React**            | ❌             | ⚠️³    | ⚠️³     | ❌     | ✅                    |
+| **Intent / event-driven friendly** | ❌             | ❌     | ⚠️      | ❌     | ✅                    |
+| **Async flow native**              | ❌             | ⚠️     | ❌      | ❌     | ✅                    |
+| **Devtools ecosystem**             | ❌             | ✅     | ⚠️      | ⚠️     | ❌ (by design)        |
+| **Bundle size**                    | tiny           | large | small   | small  | **tiny**             |
 
 ---
 

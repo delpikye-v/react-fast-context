@@ -9,24 +9,29 @@ type DerivedSelector<S> = <R>(selector: (s: S) => R, equality?: (a: R, b: R) => 
     value(): R;
     subscribe(callback: (value: R) => void): () => void;
 };
-type FastContextReturn<S, A> = {
+export type FastContext<S, A> = {
     state(): S;
+    get(): S;
     set: Store<S>["set"];
     replace: Store<S>["replace"];
     batch: Store<S>["batch"];
     transaction: Store<S>["transaction"];
     subscribe: Store<S>["subscribe"];
-    devtools: (callback: (info: {
-        state: S;
-    }) => void) => () => void;
+    update(fn: (state: S) => void): void;
+    commit(fn: (state: S) => void): void;
     use: <T = S>(selector?: (state: S) => T) => T;
     computed: DerivedSelector<S>;
     select: DerivedSelector<S>;
+    peek<T = S>(selector?: (state: S) => T): T;
     when: <R>(predicate: (state: S) => R, effect: (value: R, state: S) => void) => () => void;
+    watch<R>(selector: (state: S) => R, effect: (value: R, prev: R | undefined) => void, equality?: (a: R, b: R) => boolean): () => void;
     scope(state: S, options?: {
         merge?: MergeMode;
-    }): FastContextReturn<S, A>;
+    }): FastContext<S, A>;
+    devtools: (callback: (info: {
+        state: S;
+    }) => void) => () => void;
     actions: ResolveActions<S, A>;
 };
-export declare function createFastContext<S extends object, A extends StateActionMap<S>>(props: FastContextProps<S, A>): FastContextReturn<S, A>;
+export declare function createFastContext<S extends object, A extends StateActionMap<S>>(props: FastContextProps<S, A>): FastContext<S, A>;
 export {};
